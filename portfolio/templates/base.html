@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Arda | Yazılım - Portföy{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Özel Stil -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  <!-- AOS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600&display=swap" rel="stylesheet">
+
+  <style>
+    /* Scroll To Top Butonu - Modern Premium Tasarım */
+    #scrollToTopBtn {
+      position: fixed;
+      bottom: 40px;
+      right: 40px;
+      width: 44px;
+      height: 44px;
+      background: linear-gradient(135deg, #0466c8, #023e7d);
+      box-shadow:
+        0 8px 15px rgba(4, 102, 200, 0.5),
+        0 4px 8px rgba(2, 62, 125, 0.7);
+      border-radius: 50%;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(20px);
+      transition: opacity 0.35s ease, visibility 0.35s ease, transform 0.35s ease, box-shadow 0.3s ease;
+      z-index: 1100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+    }
+
+    #scrollToTopBtn.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    #scrollToTopBtn:hover,
+    #scrollToTopBtn:focus {
+      background: linear-gradient(135deg, #023e7d, #0466c8);
+      box-shadow:
+        0 12px 24px rgba(2, 62, 125, 0.8),
+        0 6px 12px rgba(4, 102, 200, 0.9);
+      outline: none;
+      transform: translateY(-4px) scale(1.1);
+      transition: all 0.25s ease;
+    }
+  </style>
+</head>
+
+<body style="font-family: 'Inter', sans-serif; background-color: #f8f9fa;">
+
+  <!-- Navbar -->
+  <nav id="mainNavbar" class="navbar navbar-expand-lg navbar-dark fixed-top py-3 navbar-show"
+       style="backdrop-filter: blur(12px); background-color: rgba(2, 62, 125, 0.8); transition: background-color 0.3s;">
+    <div class="container">
+      <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">Arda | Yazılım</a>
+      <button class="navbar-toggler" type="button" aria-label="Menüyü aç/kapat">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse text-center" id="navbarNav">
+        <ul class="navbar-nav ms-auto gap-3">
+          <li class="nav-item"><a class="nav-link fw-semibold" href="{{ url_for('about') }}">Hakkımda</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="{{ url_for('projects') }}">Projeler</a></li>
+          <li class="nav-item"><a class="nav-link fw-semibold" href="{{ url_for('contact') }}">İletişim</a></li>
+          <li class="nav-item">
+            <a class="nav-link text-accent fw-bold border rounded-pill px-3 py-1" href="{{ url_for('admin_login') }}">Admin</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- İçerik -->
+  <main class="pt-5" style="margin-top: 70px;">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Footer -->
+  <footer class="footer-modern text-white pt-5 pb-4 mt-5">
+    <div class="container">
+      <div class="row justify-content-center text-center mb-4">
+        <div class="col-12 col-md-8 col-lg-6">
+          <h2 class="footer-title mb-3">Arda | Yazılım</h2>
+          <p class="footer-subtitle mb-0 px-3 px-md-0">
+            Yazılım dünyasında fark yaratan projelerle buradayım. Bana katılın ve birlikte büyüyelim.
+          </p>
+        </div>
+      </div>
+
+      <div class="row justify-content-center mb-5">
+        <div class="col-auto d-flex gap-4 social-icons">
+          <a href="https://instagram.com/ard__5555" target="_blank" aria-label="Instagram" class="social-link" rel="noopener">
+            <i class="bi bi-instagram"></i>
+          </a>
+          <a href="https://github.com/Sperrex55" target="_blank" aria-label="GitHub" class="social-link" rel="noopener">
+            <i class="bi bi-github"></i>
+          </a>
+          <a href="mailto:servisyonetimi50@gmail.com" aria-label="Email" class="social-link">
+            <i class="bi bi-envelope-fill"></i>
+          </a>
+          <a href="https://linkedin.com/in/ardairmak" target="_blank" aria-label="LinkedIn" class="social-link" rel="noopener">
+            <i class="bi bi-linkedin"></i>
+          </a>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col-12 text-center">
+          <hr class="footer-divider mx-auto" />
+          <small class="footer-copy">&copy; 2025 Arda | Yazılım. Tüm hakları saklıdır.</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scroll To Top Butonu -->
+  <button id="scrollToTopBtn" aria-label="Sayfanın üstüne git" title="Sayfanın üstüne git">
+    <i class="bi bi-arrow-up"></i>
+  </button>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ duration: 800, once: true });
+
+    const navbar = document.getElementById("mainNavbar");
+    let lastScrollTop = 0;
+
+    window.addEventListener("scroll", () => {
+      let scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+      // Navbar renk değişimi
+      if (scrollTop > 80) {
+        navbar.style.backgroundColor = "#023e7d";
+      } else {
+        navbar.style.backgroundColor = "rgba(2, 62, 125, 0.8)";
+      }
+
+      // Navbar aşağı kayarken gizle, yukarı kayarken göster
+      if (scrollTop > lastScrollTop && scrollTop > 80) {
+        navbar.classList.remove("navbar-show");
+        navbar.classList.add("navbar-hide");
+      } else {
+        navbar.classList.remove("navbar-hide");
+        navbar.classList.add("navbar-show");
+      }
+
+      lastScrollTop = scrollTop <= 0 ? 0 : scrollTop;
+
+      // Scroll to top buton göster/gizle
+      const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+      if (scrollTop > 300) {
+        scrollToTopBtn.classList.add('show');
+      } else {
+        scrollToTopBtn.classList.remove('show');
+      }
+    });
+
+    // Kaymak gibi açılır kapanır mobil menü
+    const toggler = document.querySelector(".navbar-toggler");
+    const menu = document.getElementById("navbarNav");
+
+    toggler.addEventListener("click", () => {
+      if (menu.classList.contains("show")) {
+        menu.style.maxHeight = null;
+        menu.classList.remove("show");
+      } else {
+        menu.classList.add("show");
+        menu.style.maxHeight = menu.scrollHeight + "px";
+      }
+    });
+
+    // Scroll to top butonu tıklama olayı
+    const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+    scrollToTopBtn.addEventListener('click', () => {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth'
+      });
+    });
+  </script>
+
+</body>
+</html>

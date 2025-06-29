@@ -1,0 +1,466 @@
+{% extends "base.html" %}
+
+{% block head_extra %}
+  <!-- AOS CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet" />
+{% endblock %}
+
+{% block title %}Arda  Yazılım | Portföy{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section d-flex flex-column justify-content-center align-items-center text-center text-white position-relative" 
+  style="height: 100vh; background: linear-gradient(135deg, #001845 0%, #023e7d 100%); margin-top: -35px; overflow: hidden;"
+  data-aos="fade-down" data-aos-duration="1200" data-aos-easing="ease-in-out">
+  <div class="overlay position-absolute w-100 h-100" 
+       style="background: rgba(0,0,0,0.55); border-bottom-left-radius: 60px; border-bottom-right-radius: 60px; inset: 0; z-index: 1; backdrop-filter: brightness(0.7) contrast(1.1);"></div>
+  <div class="container position-relative z-2 px-4">
+    <h1 class="display-1 fw-bold hero-title mb-4" 
+        style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; text-shadow: 0 4px 15px rgba(0,0,0,0.45);">
+      <span id="typed-text"></span><span id="cursor">|</span>
+    </h1>
+    <p class="lead hero-subtitle mb-5" style="color: #d1d8e0; font-weight: 700; letter-spacing: 0.1em; font-size: 1.45rem; max-width: 540px; margin-left: auto; margin-right: auto; text-shadow: 0 2px 8px rgba(0,0,0,0.3);">
+      Full-Stack Yazılım Geliştiricisi | Python • Flask • HTML
+    </p>
+   <a href="{{ url_for('projects') }}" 
+   class="btn btn-cta px-6 py-3 rounded-pill d-inline-flex align-items-center gap-2"
+   data-aos="zoom-in" data-aos-delay="500" data-aos-duration="800">
+   <i class="bi bi-arrow-right-circle-fill fs-5"></i> Projelerime Göz At
+</a>
+
+  </div>
+</section>
+
+<!-- ABOUT CTA -->
+<section class="py-5 bg-light" style="background-color: #f9fbff;" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out">
+  <div class="container text-center px-4">
+    <h2 class="fw-bold mb-4 about-title" style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; font-size: 2rem;">
+      Ben Kimim?
+    </h2>
+    <p class="lead mx-auto about-text" style="max-width: 800px; color: #4a5568; font-weight: 600; font-family: 'Open Sans', sans-serif; line-height: 1.85; font-size: 1.2rem;">
+      Yazılım geliştirme yolculuğuma genç yaşta başladım ve bugün modern web teknolojileriyle kullanıcı dostu, yüksek performanslı projeler geliştiriyorum.  
+      Hedefim, sektörde fark yaratacak işlere imza atmak ve her projede yeni teknolojileri ustalıkla kullanmak.
+    </p>
+    <a href="{{ url_for('about') }}" class="btn btn-outline-primary rounded-pill px-5 py-2 mt-4 fw-semibold about-btn"
+       style="letter-spacing: 0.08em; font-family: 'Montserrat', sans-serif; text-transform: uppercase; font-weight: 700; font-size: 1rem;"
+       data-aos="fade-up" data-aos-delay="300" data-aos-duration="800">
+      Hakkımda
+    </a>
+  </div>
+</section>
+
+<!-- PROJECTS SECTION -->
+<section id="projects" class="py-6" style="background-color: #f0f4fa;">
+  <div class="container px-4">
+    <h2 class="text-center fw-bold mb-5 projects-title" style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; font-size: 2.25rem;" data-aos="fade-up" data-aos-duration="1200">
+      Projelerim
+    </h2>
+    <div class="row g-5">
+      {% for proje in projeler %}
+      <div class="col-md-4" data-aos="zoom-in-up" data-aos-delay="{{ loop.index0 * 150 }}" data-aos-duration="900">
+        <div class="card project-card shadow-sm border-0 rounded-5 overflow-hidden h-100" 
+             style="cursor: pointer; background: linear-gradient(135deg, #e8f0fe 0%, #bbdefb 100%); transition: all 0.4s ease;">
+          {% if proje.proje_img %}
+          <img src="{{ url_for('static', filename='img/' + proje.proje_img) }}" 
+               class="card-img-top rounded-top-5" alt="{{ proje.baslik }}" 
+               style="object-fit: cover; height: 220px; transition: transform 0.4s ease;">
+          {% else %}
+          <img src="{{ url_for('static', filename='img/default-project.png') }}" 
+               class="card-img-top rounded-top-5" alt="Proje" 
+               style="object-fit: cover; height: 220px; transition: transform 0.4s ease;">
+          {% endif %}
+          <div class="card-body d-flex flex-column">
+            <h5 class="fw-bold" style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; letter-spacing: 0.05em; font-size: 1.3rem;">{{ proje.baslik }}</h5>
+            <p class="card-text flex-grow-1" style="color: #3a4a63; font-family: 'Open Sans', sans-serif; line-height: 1.7; font-size: 1rem; margin-top: 0.5rem;">
+              {{ proje.aciklama[:150] }}{% if proje.aciklama|length > 150 %}...{% endif %}
+            </p>
+            {% if proje.github_link %}
+            <a href="{{ proje.github_link }}" target="_blank" class="btn btn-accent mt-4 rounded-pill fw-semibold" style="letter-spacing: 0.07em; font-size: 1rem;">
+              GitHub
+            </a>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      {% else %}
+      <p class="text-center" style="color: #4a5568; font-family: 'Open Sans', sans-serif;">Henüz proje eklenmemiş.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+
+<!-- TECHNOLOGIES SECTION -->
+<section class="py-6" style="background-color: #ffffff;" data-aos="fade-up" data-aos-duration="1000" data-aos-easing="ease-in-out">
+  <div class="container text-center px-4">
+    <h2 class="fw-bold mb-5" style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; letter-spacing: 0.08em; text-transform: uppercase; font-size: 2rem;">Kullandığım Teknolojiler</h2>
+
+    <!-- Kayan ve sürüklenebilir alan -->
+    <div id="technology-scroll" class="technology-marquee-wrapper overflow-hidden position-relative rounded-4 shadow-sm" 
+         style="cursor: grab; overflow-x: auto; scroll-behavior: smooth; -ms-overflow-style: none; scrollbar-width: none; padding: 1rem 0; background: #f7faff; border: 1.5px solid #cbd5e1;">
+
+      <div class="technology-marquee d-flex gap-5" style="min-width: max-content; animation: marquee-left 25s linear infinite;">
+        {% set techs = [
+          {'icon': 'bi-file-code', 'name': 'HTML'},
+          {'icon': 'bi-paint-bucket', 'name': 'CSS'},
+          {'icon': 'bi-code-slash', 'name': 'JavaScript'},
+          {'icon': 'bi-file-code', 'name': 'Python'},
+          {'icon': 'bi-server', 'name': 'Flask'},
+          {'icon': 'bi-braces', 'name': 'SQLAlchemy'}
+        ] %}
+
+        {% for tech in techs %}
+        <div class="technology-card p-4 rounded-4 shadow-sm d-flex flex-column justify-content-center align-items-center" style="min-width: 150px; background: white; border: 1.5px solid #a3bffa; transition: all 0.3s ease;" data-aos="flip-left" data-aos-delay="{{ loop.index0 * 150 }}" data-aos-duration="800">
+          <i class="bi {{ tech.icon }} fs-1 mb-3 text-accent tech-icon" style="transition: color 0.4s ease;"></i>
+          <span style="color: #4a5568; font-weight: 700; letter-spacing: 0.04em; font-size: 1.05rem;">{{ tech.name }}</span>
+        </div>
+        {% endfor %}
+
+        {% for tech in techs %}
+        <div class="technology-card p-4 rounded-4 shadow-sm d-flex flex-column justify-content-center align-items-center" style="min-width: 150px; background: white; border: 1.5px solid #a3bffa; transition: all 0.3s ease;" data-aos="flip-left" data-aos-delay="{{ (loop.index0 + techs|length) * 150 }}" data-aos-duration="800">
+          <i class="bi {{ tech.icon }} fs-1 mb-3 text-accent tech-icon" style="transition: color 0.4s ease;"></i>
+          <span style="color: #4a5568; font-weight: 700; letter-spacing: 0.04em; font-size: 1.05rem;">{{ tech.name }}</span>
+        </div>
+        {% endfor %}
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- CONTACT CTA -->
+<section class="text-white py-6" style="background: linear-gradient(135deg, #001845, #023e7d); border-top-left-radius: 60px; border-top-right-radius: 60px;" data-aos="zoom-in" data-aos-duration="1000" data-aos-easing="ease-in-out">
+  <div class="container text-center px-4">
+    <h2 class="mb-4 fw-bold contact-title" style="font-family: 'Montserrat', sans-serif; text-shadow: 0 3px 10px rgba(0,0,0,0.4); font-size: 2rem;">Benimle Proje Yapmak İster Misin?</h2>
+    <p class="lead mb-5 contact-text" style="color: #d1d8e0; font-weight: 700; font-family: 'Open Sans', sans-serif; font-size: 1.25rem; max-width: 600px; margin-left: auto; margin-right: auto;">
+      Fikirlerini hayata geçirmek ve yeni iş birlikleri için bana ulaşabilirsin.
+    </p>
+    <a href="{{ url_for('contact') }}" class="btn btn-light btn-lg px-6 py-3 rounded-pill fw-semibold contact-btn" 
+       style="letter-spacing: 0.1em; font-family: 'Montserrat', sans-serif; box-shadow: 0 5px 20px rgba(255,255,255,0.8); transition: all 0.4s ease;">
+      İletişime Geç
+    </a>
+  </div>
+</section>
+
+<style>
+  :root {
+    --primary-color: #0466c8;
+    --accent-color: #023e7d;
+    --btn-gradient-start: #023e7d;
+    --btn-gradient-end: #0466c8;
+    --btn-shadow-color: rgba(4, 102, 200, 0.6);
+  }
+
+  /* Buttons */
+  .btn-accent {
+    background: linear-gradient(135deg, var(--btn-gradient-start), var(--btn-gradient-end));
+    color: white;
+    transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+    box-shadow: 0 12px 40px var(--btn-shadow-color);
+  }
+
+  .btn-accent:hover, .btn-accent:focus {
+    background: linear-gradient(135deg, var(--btn-gradient-end), var(--btn-gradient-start));
+    box-shadow: 0 18px 50px rgba(2, 62, 125, 0.85);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  .btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    border-radius: 30px;
+    padding: 12px 36px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    font-size: 1rem;
+    transition: all 0.4s ease;
+  }
+
+  .btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(2, 62, 125, 0.55);
+    transform: translateY(-4px) scale(1.05);
+  }
+
+  /* Project cards */
+  .project-card {
+    background: white;
+    border-radius: 30px;
+    box-shadow: 0 12px 35px rgba(4, 102, 200, 0.1);
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+  }
+
+  .project-card:hover {
+    box-shadow: 0 25px 65px rgba(4, 102, 200, 0.3);
+    transform: translateY(-12px) scale(1.03);
+  }
+
+  .project-card img {
+    transition: transform 0.5s ease;
+  }
+
+  .project-card:hover img {
+    transform: scale(1.1);
+  }
+
+  /* Technology cards */
+  .technology-card {
+    cursor: default;
+    background: #ffffff;
+    border: 1.8px solid #a3bffa;
+    border-radius: 24px;
+    padding: 1.5rem 1.8rem;
+    box-shadow: 0 5px 20px rgba(163, 191, 250, 0.15);
+    transition: all 0.35s ease;
+    user-select: none;
+  }
+
+  .technology-card:hover {
+    box-shadow: 0 20px 50px rgba(4, 102, 200, 0.25);
+    transform: translateY(-7px) scale(1.07);
+  }
+
+  .tech-icon {
+    color: var(--accent-color);
+    transition: color 0.4s ease;
+  }
+
+  .technology-card:hover .tech-icon {
+    color: var(--primary-color);
+  }
+
+  /* Hero text animations */
+  #cursor {
+    display: inline-block;
+    font-weight: 700;
+    color: var(--accent-color);
+    animation: blink 1s step-start infinite;
+    margin-left: 4px;
+  }
+
+  @keyframes blink {
+    0%, 50% {
+      opacity: 1;
+    }
+    51%, 100% {
+      opacity: 0;
+    }
+  }
+
+  /* Technology marquee animation */
+  .technology-marquee-wrapper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .technology-marquee {
+    display: flex;
+    gap: 2rem;
+    animation: marquee-left 25s linear infinite;
+  }
+
+  @keyframes marquee-left {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  /* Scrollbar hide */
+  #technology-scroll::-webkit-scrollbar {
+    display: none;
+  }
+  #technology-scroll {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  /* Responsive */
+  @media (max-width: 992px) {
+    .hero-section {
+      height: 85vh;
+    }
+
+    .hero-title {
+      font-size: 3.5rem !important;
+    }
+
+    .hero-subtitle {
+      font-size: 1.25rem !important;
+      max-width: 80vw;
+    }
+
+    .btn-accent {
+      padding-left: 3.5rem !important;
+      padding-right: 3.5rem !important;
+      font-size: 1.1rem !important;
+    }
+
+    .project-card h5 {
+      font-size: 1.15rem !important;
+    }
+
+    .technology-card {
+      min-width: 130px !important;
+      padding: 1rem 1.3rem !important;
+      border-radius: 20px !important;
+    }
+  }
+
+  @media (max-width: 576px) {
+    .hero-title {
+      font-size: 2.8rem !important;
+      margin-bottom: 1rem !important;
+    }
+
+    .hero-subtitle {
+      font-size: 1.05rem !important;
+    }
+
+    .btn-accent {
+      font-size: 1rem !important;
+      padding: 0.8rem 2.5rem !important;
+    }
+  }
+
+
+  .btn-cta {
+  background: linear-gradient(135deg, #0466c8, #023e7d);
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.1rem;
+  letter-spacing: 0.08em;
+  border: none;
+  box-shadow: 0 10px 30px rgba(4, 102, 200, 0.6);
+  transition: all 0.4s ease;
+  padding: 0.9rem 2.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-cta::before {
+  content: "";
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.25) 0%, transparent 60%);
+  opacity: 0;
+  transition: all 0.6s ease;
+  transform: rotate(45deg);
+}
+
+.btn-cta:hover::before {
+  top: -10%;
+  left: -10%;
+  opacity: 1;
+}
+
+.btn-cta:hover {
+  background: linear-gradient(135deg, #023e7d, #0466c8);
+  box-shadow: 0 18px 50px rgba(2, 62, 125, 0.85);
+  transform: translateY(-3px) scale(1.03);
+  color: #fff;
+  text-decoration: none;
+}
+
+.btn-cta i {
+  transition: transform 0.4s ease;
+}
+
+.btn-cta:hover i {
+  transform: translateX(5px);
+}
+
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    AOS.init({
+      once: true,
+      easing: 'ease-in-out',
+      duration: 1000,
+    });
+  });
+
+  // Technology scroll drag logic (same as before)
+  const scrollContainer = document.getElementById('technology-scroll');
+  const marquee = scrollContainer.querySelector('.technology-marquee');
+
+  let isDown = false;
+  let startX, scrollLeft;
+
+  scrollContainer.addEventListener('mousedown', e => {
+    isDown = true;
+    scrollContainer.style.cursor = 'grabbing';
+    startX = e.pageX - scrollContainer.offsetLeft;
+    scrollLeft = scrollContainer.scrollLeft;
+    marquee.style.animationPlayState = 'paused';
+  });
+
+  scrollContainer.addEventListener('mouseleave', () => {
+    isDown = false;
+    scrollContainer.style.cursor = 'grab';
+    marquee.style.animationPlayState = 'running';
+  });
+
+  scrollContainer.addEventListener('mouseup', () => {
+    isDown = false;
+    scrollContainer.style.cursor = 'grab';
+    marquee.style.animationPlayState = 'running';
+  });
+
+  scrollContainer.addEventListener('mousemove', e => {
+    if(!isDown) return;
+    e.preventDefault();
+    const x = e.pageX - scrollContainer.offsetLeft;
+    const walk = (x - startX) * 2;
+    scrollContainer.scrollLeft = scrollLeft - walk;
+  });
+
+  // Touch support
+  let touchStartX = 0;
+  let touchScrollLeft = 0;
+
+  scrollContainer.addEventListener('touchstart', e => {
+    touchStartX = e.touches[0].pageX - scrollContainer.offsetLeft;
+    touchScrollLeft = scrollContainer.scrollLeft;
+    marquee.style.animationPlayState = 'paused';
+  });
+
+  scrollContainer.addEventListener('touchend', () => {
+    marquee.style.animationPlayState = 'running';
+  });
+
+  scrollContainer.addEventListener('touchmove', e => {
+    const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+    const walk = (x - touchStartX) * 2;
+    scrollContainer.scrollLeft = touchScrollLeft - walk;
+  });
+
+  // Typed text animation
+  const fullText = "Merhaba, Ben Arda";
+  const typedText = document.getElementById('typed-text');
+  let index = 0;
+  const speed = 150;
+
+  function type() {
+    if (index < fullText.length) {
+      typedText.textContent += fullText.charAt(index);
+      index++;
+      setTimeout(type, speed);
+    }
+  }
+
+  type();
+</script>
+
+{% endblock %}

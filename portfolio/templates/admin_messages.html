@@ -1,0 +1,75 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Admin Panel - Gelen Mesajlar{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column">
+  <h2 class="mb-4 text-primary fw-bold">📥 Gelen Mesajlar</h2>
+
+  {% if mesajlar %}
+  <div class="row g-4">
+    {% for msg in mesajlar %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card shadow-sm h-100 border-0 rounded-4">
+        <div class="card-body d-flex flex-column">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <h5 class="card-title mb-0 text-primary fw-semibold">
+              <i class="bi bi-person-circle me-2"></i>{{ msg.isim | e }}
+            </h5>
+            <small class="text-muted fst-italic" title="Gönderilme Tarihi">
+              <i class="bi bi-clock-history me-1"></i>{{ msg.gonderme_tarihi.strftime('%d.%m.%Y %H:%M') }}
+            </small>
+          </div>
+          <p class="card-text text-secondary flex-grow-1" style="white-space: pre-line;">{{ msg.mesaj | e }}</p>
+          <div class="mt-3 d-flex justify-content-between align-items-center">
+            <a href="mailto:{{ msg.email }}" class="text-decoration-none text-info fw-medium" title="E-posta Gönder">
+              <i class="bi bi-envelope-fill me-1"></i>{{ msg.email | e }}
+            </a>
+
+            <!-- Sil Butonu -->
+            <button type="button" class="btn btn-sm btn-danger rounded-pill fw-semibold px-3"
+              data-bs-toggle="modal" data-bs-target="#deleteModal{{ msg.id }}">
+              <i class="bi bi-trash me-1"></i> Sil
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Silme Onay Modalı -->
+    <div class="modal fade" id="deleteModal{{ msg.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ msg.id }}" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content rounded-4">
+          <div class="modal-header bg-danger text-white rounded-top-4">
+            <h5 class="modal-title" id="deleteModalLabel{{ msg.id }}">
+              <i class="bi bi-exclamation-triangle me-2"></i> Mesajı Sil
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+          </div>
+          <div class="modal-body">
+            <p><strong>{{ msg.isim | e }}</strong> adlı kişinin mesajını silmek istediğine emin misin?</p>
+          </div>
+          <div class="modal-footer">
+            <form method="POST" action="{{ url_for('delete_message', mesaj_id=msg.id) }}">
+              <button type="button" class="btn btn-secondary rounded-pill" data-bs-dismiss="modal">Vazgeç</button>
+              <button type="submit" class="btn btn-danger rounded-pill fw-semibold">Evet, Sil</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="alert alert-info rounded-4 shadow-sm" role="alert">
+    <i class="bi bi-info-circle me-2"></i> Henüz mesaj bulunmamaktadır.
+  </div>
+  {% endif %}
+
+  <div class="mt-4">
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-primary btn-lg fw-semibold">
+      <i class="bi bi-arrow-left-circle me-2"></i> Geri Dön
+    </a>
+  </div>
+</div>
+{% endblock %}

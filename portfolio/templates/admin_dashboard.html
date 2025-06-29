@@ -1,0 +1,134 @@
+{% extends "base_admin.html" %}
+
+{% block title %}Admin Panel - Projeler{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column">
+  <h2 class="mb-4 text-primary fw-bold">📂 Projeler</h2>
+
+  <a href="{{ url_for('add_project') }}" class="btn btn-accent mb-4 align-self-start px-4 py-2 shadow-sm rounded-pill"
+     style="font-weight: 600; letter-spacing: 0.03em;">
+    <i class="bi bi-plus-circle me-2"></i> Yeni Proje Ekle
+  </a>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      {% for category, message in messages %}
+        <div class="alert alert-{{ category }} alert-dismissible fade show rounded-3 shadow-sm fw-medium" role="alert">
+          {{ message }}
+          <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endwith %}
+
+  {% if projeler %}
+  <div class="table-responsive rounded-4 shadow-sm border">
+    <table class="table table-hover align-middle mb-0">
+      <thead class="table-dark text-white rounded-top-4">
+        <tr>
+          <th scope="col" class="text-center" style="width: 50px;">#</th>
+          <th scope="col" class="min-w-220">Başlık</th>
+          <th scope="col" class="min-w-250">GitHub Link</th>
+          <th scope="col" class="text-center" style="width: 180px;">Eklenme Tarihi</th>
+          <th scope="col" class="text-center" style="width: 130px;">İşlemler</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for proje in projeler %}
+        <tr class="align-middle">
+          <td class="text-center fw-semibold">{{ loop.index }}</td>
+          <td class="fw-semibold text-truncate" style="max-width: 240px;" title="{{ proje.baslik }}">{{ proje.baslik }}</td>
+          <td style="max-width: 270px; word-break: break-word;">
+            {% if proje.github_link %}
+              <a href="{{ proje.github_link }}" target="_blank" class="text-decoration-none fw-medium text-info"
+                 title="{{ proje.github_link }}">
+                {{ proje.github_link }}
+              </a>
+            {% else %}
+              <span class="text-muted fst-italic">-</span>
+            {% endif %}
+          </td>
+          <td class="text-center">{{ proje.eklenme_tarihi.strftime('%d.%m.%Y %H:%M') }}</td>
+          <td class="text-center">
+            <!-- Silme Butonu -->
+            <button type="button" class="btn btn-sm btn-danger shadow-sm px-3 rounded-pill"
+                    data-bs-toggle="modal" data-bs-target="#deleteModal{{ proje.id }}">
+              <i class="bi bi-trash me-1"></i> Sil
+            </button>
+
+            <!-- Silme Onay Modali -->
+            <div class="modal fade" id="deleteModal{{ proje.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ proje.id }}" aria-hidden="true">
+              <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content rounded-4 border-0 shadow-sm">
+                  <div class="modal-header bg-danger text-white rounded-top-4">
+                    <h5 class="modal-title fw-semibold" id="deleteModalLabel{{ proje.id }}">
+                      <i class="bi bi-exclamation-triangle me-2"></i> Projeyi Sil
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Kapat"></button>
+                  </div>
+                  <div class="modal-body">
+                    <p class="mb-0">"<strong>{{ proje.baslik }}</strong>" adlı projeyi silmek istediğinize emin misiniz? Bu işlem geri alınamaz.</p>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary rounded-pill px-3" data-bs-dismiss="modal">İptal</button>
+                    <form action="{{ url_for('delete_project', proje_id=proje.id) }}" method="POST" class="d-inline">
+                      <button type="submit" class="btn btn-danger rounded-pill px-3">Evet, Sil</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+    <div class="alert alert-info rounded-3 shadow-sm fw-medium mt-3" role="alert">
+      <i class="bi bi-info-circle me-2"></i> Henüz proje bulunmamaktadır.
+    </div>
+  {% endif %}
+</div>
+
+<style>
+  .min-w-220 { min-width: 220px; }
+  .min-w-250 { min-width: 250px; }
+
+  table.table tbody tr:hover {
+    background-color: #f0f6ff;
+    transition: background-color 0.25s ease;
+  }
+
+  .btn-danger {
+    transition: all 0.3s ease;
+  }
+
+  .btn-danger:hover {
+    background-color: #b02a37;
+  }
+
+  .btn-accent {
+    background-color: #0466c8;
+    color: #fff;
+    border: none;
+  }
+
+  .btn-accent:hover {
+    background-color: #0353a4;
+  }
+
+  thead.table-dark th {
+    background-color: #0b1e3f;
+    color: #ffffff;
+    border: none;
+  }
+
+  .text-truncate {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+</style>
+{% endblock %}

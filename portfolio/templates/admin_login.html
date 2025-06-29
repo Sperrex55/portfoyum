@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Giriş{% endblock %}
+
+{% block content %}
+<div class="container d-flex justify-content-center align-items-center" style="height: 70vh;">
+  <div class="card shadow-sm p-5 rounded-5" style="max-width: 420px; width: 100%; background: linear-gradient(135deg, #f0f4ff, #d9e2ff); border: none;">
+    <h3 class="text-primary mb-4 text-center" style="font-family: 'Poppins', sans-serif; letter-spacing: 1px; font-weight: 700;">
+      Yönetici Girişi
+    </h3>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }} alert-dismissible fade show rounded-3 shadow-sm" role="alert" style="font-weight: 600; font-size: 1rem;">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="{{ url_for('admin_login') }}" novalidate>
+      <div class="mb-4">
+        <label for="kullanici_adi" class="form-label fw-semibold" style="font-family: 'Montserrat', sans-serif;">Kullanıcı Adı</label>
+        <input type="text" name="kullanici_adi" id="kullanici_adi" class="form-control form-control-lg" placeholder="Kullanıcı adı" required
+          style="border-radius: 12px; border: 1.8px solid #c5cbe3; transition: border-color 0.3s ease;">
+      </div>
+      <div class="mb-5">
+        <label for="sifre" class="form-label fw-semibold" style="font-family: 'Montserrat', sans-serif;">Şifre</label>
+        <input type="password" name="sifre" id="sifre" class="form-control form-control-lg" placeholder="Şifre" required
+          style="border-radius: 12px; border: 1.8px solid #c5cbe3; transition: border-color 0.3s ease;">
+      </div>
+      <button type="submit" class="btn btn-primary w-100 fw-bold py-3" style="border-radius: 30px; font-size: 1.1rem; letter-spacing: 0.05em;">
+        Giriş Yap
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+  input.form-control:focus {
+    border-color: #0466c8 !important;
+    box-shadow: none !important;
+  }
+  button.btn-primary {
+    background: linear-gradient(135deg, #0466c8, #0353a4);
+    border: none;
+    transition: background-color 0.25s ease;
+  }
+  button.btn-primary:hover,
+  button.btn-primary:focus {
+    background: linear-gradient(135deg, #0353a4, #023e7d);
+    box-shadow: none;
+  }
+  /* Scrollbar removal for inputs on Firefox */
+  input.form-control {
+    scrollbar-width: none;
+  }
+</style>
+{% endblock %}

@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Admin Panel{% endblock %}</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet" />
+
+  <!-- Özel Stil -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  <style>
+    :root {
+      --sidebar-width: 250px;
+      --sidebar-collapsed-width: 70px;
+      --transition-speed: 0.3s;
+    }
+
+    /* Temel Ayarlar */
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: #f5f7fa;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    #sidebar {
+      width: var(--sidebar-width);
+      height: 100vh;
+      position: fixed;
+      top: 0;
+      left: 0;
+      background-color: #023e7d;
+      padding-top: 60px;
+      transition: width var(--transition-speed), left var(--transition-speed);
+      z-index: 1040;
+      overflow-y: auto;
+    }
+
+    /* Sidebar collapsed (daraltılmış) */
+    #sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    /* Sidebar gizlenmiş (mobil menü açıkken) */
+    #sidebar.hidden {
+      left: -250px;
+    }
+
+    /* Sidebar nav linkleri */
+    #sidebar .nav-link {
+      color: #cfd8dc;
+      font-weight: 600;
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: background-color var(--transition-speed), color var(--transition-speed);
+      white-space: nowrap;
+    }
+
+    #sidebar .nav-link:hover,
+    #sidebar .nav-link.active {
+      background-color: #0466c8;
+      color: #fff;
+    }
+
+    #sidebar .nav-link .bi {
+      font-size: 1.3rem;
+      min-width: 24px;
+      text-align: center;
+    }
+
+    /* Sidebar span gizleme (dar halde) */
+    #sidebar.collapsed .nav-link span {
+      display: none;
+    }
+
+    /* İçerik */
+    #content {
+      margin-left: var(--sidebar-width);
+      padding: 90px 40px 30px; /* üst padding navbar yüksekliği + ekstra boşluk */
+      min-height: 100vh;
+      transition: margin-left var(--transition-speed), padding var(--transition-speed);
+    }
+
+    #content.collapsed {
+      margin-left: var(--sidebar-collapsed-width);
+    }
+
+    /* Üst navbar */
+    #topNavbar {
+      height: 60px;
+      position: fixed;
+      top: 0;
+      left: var(--sidebar-width);
+      right: 0;
+      background-color: #001845;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1050;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+      transition: left var(--transition-speed);
+    }
+
+    #topNavbar.collapsed {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    /* Kullanıcı bilgisi */
+    #topNavbar .user-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 600;
+    }
+
+    #topNavbar .user-info i {
+      font-size: 1.3rem;
+      color: #0466c8;
+    }
+
+    /* Hamburger butonu */
+    #sidebarToggle {
+      display: none;
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    /* Mobil düzen */
+    @media (max-width: 991.98px) {
+      #sidebar {
+        left: -250px;
+        width: 250px;
+        padding-top: 60px;
+      }
+
+      #sidebar.show {
+        left: 0;
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
+      }
+
+      #sidebar.collapsed {
+        width: 250px;
+      }
+
+      #content {
+        margin-left: 0;
+        padding: 90px 20px 30px;
+      }
+
+      #content.collapsed {
+        margin-left: 0;
+      }
+
+      #topNavbar {
+        left: 0;
+      }
+
+      #topNavbar.collapsed {
+        left: 0;
+      }
+
+      #sidebarToggle {
+        display: block;
+      }
+
+      /* Mobilde overlay */
+      #overlay {
+        position: fixed;
+        display: none;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 1030;
+      }
+
+      #overlay.show {
+        display: block;
+      }
+    }
+
+    /* Scrollbar sidebar için (isteğe bağlı) */
+    #sidebar::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    #sidebar::-webkit-scrollbar-thumb {
+      background-color: #0466c8;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Sidebar -->
+  <nav id="sidebar" class="d-flex flex-column position-fixed">
+    <a href="{{ url_for('admin_dashboard') }}" class="nav-link {% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+      <i class="bi bi-kanban-fill"></i><span>Projeler</span>
+    </a>
+    <a href="{{ url_for('admin_messages') }}" class="nav-link {% if request.endpoint == 'admin_messages' %}active{% endif %}">
+      <i class="bi bi-chat-dots-fill"></i><span>Mesajlar</span>
+    </a>
+    <a href="{{ url_for('add_project') }}" class="nav-link {% if request.endpoint == 'add_project' %}active{% endif %}">
+      <i class="bi bi-plus-circle-fill"></i><span>Yeni Proje Ekle</span>
+    </a>
+    <a href="{{ url_for('logout') }}" class="nav-link">
+      <i class="bi bi-box-arrow-right"></i><span>Çıkış</span>
+    </a>
+  </nav>
+
+  <!-- Overlay (mobilde sidebar için) -->
+  <div id="overlay"></div>
+
+  <!-- Top Navbar -->
+  <header id="topNavbar">
+    <button id="sidebarToggle" aria-label="Menüyü aç/kapat">
+      <i class="bi bi-list"></i>
+    </button>
+    <div class="user-info">
+      <i class="bi bi-person-circle"></i>
+      <span>{{ current_user.kullanici_adi }}</span>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main id="content">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- AOS JS -->
+  <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+
+  <script>
+    AOS.init({ duration: 800, once: true });
+
+    const sidebar = document.getElementById('sidebar');
+    const sidebarToggle = document.getElementById('sidebarToggle');
+    const content = document.getElementById('content');
+    const topNavbar = document.getElementById('topNavbar');
+    const overlay = document.getElementById('overlay');
+
+    function toggleSidebar() {
+      if (window.innerWidth <= 991.98) {
+        // Mobilde sidebar göster/gizle
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+        // Body scroll engelle/izni
+        if (sidebar.classList.contains('show')) {
+          document.body.style.overflow = 'hidden';
+        } else {
+          document.body.style.overflow = '';
+        }
+      } else {
+        // Büyük ekranlarda sidebar küçült/uzat
+        sidebar.classList.toggle('collapsed');
+        content.classList.toggle('collapsed');
+        topNavbar.classList.toggle('collapsed');
+      }
+    }
+
+    sidebarToggle.addEventListener('click', toggleSidebar);
+
+    // Overlay tıklanınca sidebar gizle
+    overlay.addEventListener('click', () => {
+      sidebar.classList.remove('show');
+      overlay.classList.remove('show');
+      document.body.style.overflow = '';
+    });
+
+    // Pencere yeniden boyutlandırıldığında durumları resetle
+    window.addEventListener('resize', () => {
+      if (window.innerWidth > 991.98) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        content.classList.remove('collapsed');
+        sidebar.classList.remove('collapsed');
+        topNavbar.classList.remove('collapsed');
+        document.body.style.overflow = '';
+      } else {
+        sidebar.classList.remove('collapsed');
+        content.classList.remove('collapsed');
+        topNavbar.classList.remove('collapsed');
+      }
+    });
+  </script>
+
+</body>
+
+</html>

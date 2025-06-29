@@ -1,0 +1,156 @@
+{% extends "base.html" %}
+
+{% block title %}İletişim | Arda Irmak{% endblock %}
+
+{% block content %}
+
+<!-- CONTACT HERO -->
+<section class="contact-hero d-flex flex-column justify-content-center align-items-center text-center text-white position-relative"
+  style="height: 60vh; background: linear-gradient(135deg, #001845 0%, #023e7d 100%); margin-top: -35px; overflow: hidden;">
+  <div class="overlay position-absolute w-100 h-100" 
+       style="background: rgba(0,0,0,0.6); inset: 0; z-index: 1; backdrop-filter: brightness(0.7) contrast(1.1);"></div>
+  <div class="container position-relative z-2 px-4">
+    <h1 class="display-2 fw-bold" style="font-family: 'Montserrat', sans-serif; text-shadow: 0 3px 12px rgba(0,0,0,0.5);">
+      Bana Ulaş
+    </h1>
+    <p class="lead mt-3" style="color: #d1d8e0; font-weight: 600; letter-spacing: 0.07em; font-size: 1.3rem;">
+      Projeler, işbirlikleri veya soruların için aşağıdaki formu doldurabilirsin.
+    </p>
+  </div>
+</section>
+
+<!-- CONTACT FORM & INFO -->
+<section class="py-6" style="background-color: #f9fbff;">
+  <div class="container px-4" data-aos="fade-up">
+    <div class="row justify-content-center gx-5 gy-5">
+      
+      <!-- FORM -->
+      <div class="col-lg-7">
+        <div class="card shadow rounded-4 p-5" style="background: white; border-radius: 30px;">
+          {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+              {% for category, message in messages %}
+                <div class="alert alert-{{ category }} text-center fw-semibold" role="alert" style="font-size: 1.15rem;">
+                  {{ message }}
+                </div>
+              {% endfor %}
+            {% endif %}
+          {% endwith %}
+
+          <form method="POST" action="{{ url_for('contact') }}" novalidate>
+            <div class="mb-4">
+              <label for="isim" class="form-label fw-semibold" style="font-family: 'Montserrat', sans-serif;">İsim Soyisim</label>
+              <input type="text" name="isim" id="isim" class="form-control form-control-lg" placeholder="Adınız Soyadınız" required
+                value="{{ request.form.isim if request.method == 'POST' else '' }}">
+            </div>
+
+            <div class="mb-4">
+              <label for="email" class="form-label fw-semibold" style="font-family: 'Montserrat', sans-serif;">E-posta</label>
+              <input type="email" name="email" id="email" class="form-control form-control-lg" placeholder="ornek@mail.com" required
+                value="{{ request.form.email if request.method == 'POST' else '' }}">
+            </div>
+
+            <div class="mb-4">
+              <label for="mesaj" class="form-label fw-semibold" style="font-family: 'Montserrat', sans-serif;">Mesajınız</label>
+              <textarea name="mesaj" id="mesaj" rows="5" class="form-control form-control-lg" placeholder="Mesajınızı buraya yazabilirsiniz..." required>{{ request.form.mesaj if request.method == 'POST' else '' }}</textarea>
+            </div>
+
+            <button type="submit" class="btn btn-accent btn-lg rounded-pill fw-bold px-5" style="letter-spacing: 0.1em;">
+              Gönder
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- CONTACT INFO -->
+      <div class="col-lg-4">
+        <div class="contact-info p-4 rounded-4 shadow-sm" style="background: white; border-radius: 30px;">
+          <h3 class="fw-bold mb-4" style="color: var(--primary-color); font-family: 'Montserrat', sans-serif; letter-spacing: 0.08em;">
+            İletişim Bilgileri
+          </h3>
+          <ul class="list-unstyled" style="color: #4a5568; font-family: 'Open Sans', sans-serif; font-size: 1.05rem; line-height: 1.8;">
+            <li class="mb-3 d-flex align-items-center">
+              <i class="bi bi-geo-alt-fill fs-4 text-accent me-3"></i>
+              <span>Samsun, Türkiye</span>
+            </li>
+            <li class="mb-3 d-flex align-items-center">
+              <i class="bi bi-envelope-fill fs-4 text-accent me-3"></i>
+              <a href="mailto:ardairmak5555@gmail.com" class="text-decoration-none text-dark">servisyonetimi50@gmail.com</a>
+            </li>
+                
+            <li class="d-flex align-items-center">
+              <i class="bi bi-clock-fill fs-4 text-accent me-3"></i>
+              <span>Hafta içi 09:00 - 18:00</span>
+            </li>
+          </ul>
+          <hr>
+          <h4 class="fw-semibold mb-3" style="font-family: 'Montserrat', sans-serif;">Sosyal Medya</h4>
+          <div class="d-flex gap-3 fs-4">
+            <a href="https://github.com/sperrex55" target="_blank" class="text-accent" aria-label="GitHub">
+              <i class="bi bi-github"></i>
+            </a>
+            <a href="https://linkedin.com/in/ardairmak" target="_blank" class="text-accent" aria-label="LinkedIn">
+              <i class="bi bi-linkedin"></i>
+            </a>
+            <a href="https://twitter.com/ardairmak" target="_blank" class="text-accent" aria-label="Twitter">
+              <i class="bi bi-twitter"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<style>
+  .btn-accent {
+    background: linear-gradient(135deg, #023e7d, #0466c8);
+    color: white;
+    transition: background 0.4s ease, box-shadow 0.4s ease, transform 0.3s ease;
+    box-shadow: 0 12px 40px rgba(4, 102, 200, 0.8);
+  }
+
+  .btn-accent:hover, .btn-accent:focus {
+    background: linear-gradient(135deg, #0466c8, #023e7d);
+    box-shadow: 0 18px 50px rgba(2, 62, 125, 0.85);
+    color: white;
+    text-decoration: none;
+    transform: translateY(-5px) scale(1.05);
+  }
+
+  .text-accent {
+    color: #023e7d !important;
+    transition: color 0.3s ease;
+  }
+
+  .text-accent:hover {
+    color: #0466c8 !important;
+  }
+
+  .contact-hero h1, 
+  .contact-hero p {
+    user-select: none;
+  }
+
+  @media (max-width: 768px) {
+    .contact-hero {
+      height: 50vh !important;
+    }
+
+    .contact-hero h1 {
+      font-size: 2.8rem !important;
+    }
+
+    .contact-hero p {
+      font-size: 1.1rem !important;
+      max-width: 90vw;
+    }
+
+    .btn-accent {
+      width: 100%;
+    }
+  }
+</style>
+
+{% endblock %}
